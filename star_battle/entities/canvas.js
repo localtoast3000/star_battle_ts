@@ -3,11 +3,7 @@ export default class Canvas{
         const canvas = document.createElement('canvas')
         canvas.setAttribute('id', id)
         this.ctx = canvas.getContext(type)
-        this.cWidth = canvas.width = width
-        this.cheight = canvas.height = height
-    }
-
-    render(content){
-        this.ctx.draw(content)
+        this.width = canvas.width = width
+        this.height = canvas.height = height
     }
 }
