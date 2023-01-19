@@ -1,14 +1,16 @@
 import { globalDirectionalKeyPressEvent } from './events/directional_keys';
-import spaceShipConstructor from './sprites/space_ship/spaceShip';
+import spaceShipConstructor from './sprites/spaceShip';
+import { CanvasContext } from './types/deps';
+import { SpriteInterface } from './types/sprites';
+import config from './config';
 
 export default function starBattleEngine(canvas: HTMLCanvasElement) {
-  const cvs = {
+  const cvs: CanvasContext = {
     ctx: canvas.getContext('2d') as CanvasRenderingContext2D,
     width: canvas.width,
     height: canvas.height,
   };
-  const gameSpeed = 20;
-  const spaceShip = spaceShipConstructor(cvs);
+  const spaceShip: SpriteInterface = spaceShipConstructor(cvs);
 
   globalDirectionalKeyPressEvent({
     left: [spaceShip.goLeft],
@@ -18,11 +20,12 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
     upLeft: [spaceShip.goUpLeft],
     downLeft: [spaceShip.goDownLeft],
     upRight: [spaceShip.goUpRight],
-    downRight: [spaceShip.goDownRight]
+    downRight: [spaceShip.goDownRight],
   });
 
+  // Game loop
   return setInterval(() => {
     cvs.ctx.clearRect(0, 0, cvs.width, cvs.height);
     spaceShip.draw();
-  }, gameSpeed);
+  }, config.speed);
 }
