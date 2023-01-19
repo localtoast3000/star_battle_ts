@@ -2,7 +2,7 @@ import { globalDirectionalKeyPressEvent } from './events/directional_keys';
 import { CanvasContext } from './types/deps';
 import { SpriteInterface } from './types/sprites';
 import config from './config';
-import backgroundConstructor from './sprites/background';
+import spaceConstructor from './sprites/space';
 import spaceShipConstructor from './sprites/spaceShip';
 
 export default function starBattleEngine(canvas: HTMLCanvasElement) {
@@ -11,24 +11,24 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
     width: canvas.width,
     height: canvas.height,
   };
-  const background: SpriteInterface = backgroundConstructor(cvs);
+  const space: SpriteInterface = spaceConstructor(cvs);
   const spaceShip: SpriteInterface = spaceShipConstructor(cvs);
 
   globalDirectionalKeyPressEvent({
-    left: [spaceShip.goLeft],
-    right: [spaceShip.goRight],
-    up: [spaceShip.goUp],
-    down: [spaceShip.goDown],
-    upLeft: [spaceShip.goUpLeft],
-    downLeft: [spaceShip.goDownLeft],
-    upRight: [spaceShip.goUpRight],
-    downRight: [spaceShip.goDownRight],
+    left: [space.goLeft, spaceShip.goLeft],
+    right: [space.goRight, spaceShip.goRight],
+    up: [space.goUp ,spaceShip.goUp],
+    down: [space.goDown, spaceShip.goDown],
+    upLeft: [space.goUpLeft,spaceShip.goUpLeft],
+    downLeft: [space.goDownLeft,spaceShip.goDownLeft],
+    upRight: [space.goUpRight ,spaceShip.goUpRight],
+    downRight: [space.goDownRight,spaceShip.goDownRight],
   });
 
   // Game loop
   return setInterval(() => {
     cvs.ctx.clearRect(0, 0, cvs.width, cvs.height);
-    background.draw();
+    space.draw();
     spaceShip.draw();
   }, config.speed);
 }
