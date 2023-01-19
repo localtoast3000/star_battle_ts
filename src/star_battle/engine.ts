@@ -13,6 +13,11 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
   const spritesConfig = {
     spaceShip: { x: cvs.dims.width / 2, y: cvs.dims.height / 2, imageType: 'forward' },
   };
+  const keyPressMap: any = new Map();
+
+  setInterval(() => {
+    keyPressMap.clear();
+  }, 1000);
 
   window.addEventListener('keydown', (e) => {
     const actions: any = {
@@ -34,7 +39,36 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
           (spritesConfig.spaceShip.y += step);
         spritesConfig.spaceShip.imageType = 'forward';
       },
+      DiagonalUpLeft: () => {
+        spritesConfig.spaceShip.x - step > -15 && (spritesConfig.spaceShip.x -= step);
+        spritesConfig.spaceShip.y - step > -15 && (spritesConfig.spaceShip.y -= step);
+        // spritesConfig.spaceShip.imageType = 'diagonalUpLeft';
+      },
+      DiagonalDownLeft: () => {
+        spritesConfig.spaceShip.x - step > -15 && (spritesConfig.spaceShip.x -= step);
+        spritesConfig.spaceShip.y + step < cvs.dims.height - 75 &&
+          (spritesConfig.spaceShip.y += step);
+        // spritesConfig.spaceShip.imageType = 'diagonalDownLeft';
+      },
+      DiagonalUpRight: () => {
+        spritesConfig.spaceShip.x + step < cvs.dims.width - 50 &&
+          (spritesConfig.spaceShip.x += step);
+        spritesConfig.spaceShip.y - step > -15 && (spritesConfig.spaceShip.y -= step);
+        // spritesConfig.spaceShip.imageType = 'diagonalUpRight';
+      },
+      DiagonalDownRight: () => {
+        spritesConfig.spaceShip.x + step < cvs.dims.width - 50 &&
+          (spritesConfig.spaceShip.x += step);
+        spritesConfig.spaceShip.y + step < cvs.dims.height - 75 &&
+          (spritesConfig.spaceShip.y += step);
+        // spritesConfig.spaceShip.imageType = 'diagonalDownRight';
+      },
     };
+    keyPressMap.set(e.key, true);
+    if (keyPressMap.size > 1) {
+      if (keyPressMap.get('ArrowLeft') && keyPressMap.get('ArrowUp'))
+        actions.DiagonalUpLeft();
+    }
     actions.hasOwnProperty(e.key) && actions[e.key]();
   });
 
