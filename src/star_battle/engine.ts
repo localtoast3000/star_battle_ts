@@ -15,6 +15,10 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
     right: [spaceShip.goRight],
     up: [spaceShip.goUp],
     down: [spaceShip.goDown],
+    upLeft: [spaceShip.goUpLeft],
+    downLeft: [spaceShip.goDownLeft],
+    upRight: [spaceShip.goUpRight],
+    downRight: [spaceShip.goDownRight]
   });
 
   return setInterval(() => {
