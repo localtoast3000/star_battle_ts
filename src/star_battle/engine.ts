@@ -13,11 +13,6 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
   const spritesConfig = {
     spaceShip: { x: cvs.dims.width / 2, y: cvs.dims.height / 2, imageType: 'forward' },
   };
-  const keyPressMap: any = new Map();
-
-  setInterval(() => {
-    keyPressMap.clear();
-  }, 1000);
 
   window.addEventListener('keydown', (e) => {
     const actions: any = {
