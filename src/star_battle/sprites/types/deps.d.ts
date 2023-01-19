@@ -6,4 +6,5 @@ export interface SpriteProps {
   };
   x: number;
   y: number;
+  imageType: string | undefined;
 }
