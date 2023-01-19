@@ -11,3 +11,7 @@ export interface SpaceShipState {
   y: number;
   imageType: string;
 }
+export interface BackgroundState {
+  x: number;
+  y: number;
+}

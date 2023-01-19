@@ -1,8 +1,9 @@
 import { globalDirectionalKeyPressEvent } from './events/directional_keys';
-import spaceShipConstructor from './sprites/spaceShip';
 import { CanvasContext } from './types/deps';
 import { SpriteInterface } from './types/sprites';
 import config from './config';
+import backgroundConstructor from './sprites/background';
+import spaceShipConstructor from './sprites/spaceShip';
 
 export default function starBattleEngine(canvas: HTMLCanvasElement) {
   const cvs: CanvasContext = {
@@ -10,6 +11,7 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
     width: canvas.width,
     height: canvas.height,
   };
+  const background: SpriteInterface = backgroundConstructor(cvs);
   const spaceShip: SpriteInterface = spaceShipConstructor(cvs);
 
   globalDirectionalKeyPressEvent({
@@ -26,6 +28,7 @@ export default function starBattleEngine(canvas: HTMLCanvasElement) {
   // Game loop
   return setInterval(() => {
     cvs.ctx.clearRect(0, 0, cvs.width, cvs.height);
+    background.draw();
     spaceShip.draw();
   }, config.speed);
 }
