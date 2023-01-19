@@ -1,10 +1,5 @@
-export interface SpriteProps {
+export interface CanvasContext {
   ctx: CanvasRenderingContext2D;
-  dims: {
-    width: number;
-    height: number;
-  };
-  x: number;
-  y: number;
-  imageType: string | undefined;
+  width: number;
+  height: number;
 }
