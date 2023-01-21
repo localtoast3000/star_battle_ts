@@ -1,7 +1,3 @@
-export interface ActionsConfig {
-  [key: string]: Function[];
-}
-
-export interface KeyBindingsInterface {
-  [key: string]: Function;
+export interface KeyActionsConfig {
+  [keyType: string]: Array<Array<Object, string>>;
 }
