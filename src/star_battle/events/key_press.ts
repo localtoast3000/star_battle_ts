@@ -1,25 +1,17 @@
-import { ActionsConfig, KeyBindingsInterface } from '../types/events';
+import { KeyActionsConfig } from '../types/events';
 import config from '../config';
 
-export function globalKeyPressEvent(actions: ActionsConfig) {
+export function globalKeyPressEvent(actions: KeyActionsConfig) {
   const keyPressTrackingMap = new Map<string, boolean>();
-  const keyBindings: KeyBindingsInterface = {
-    ArrowLeft: () => actions?.left.forEach((func) => func()),
-    ArrowRight: () => actions?.right.forEach((func) => func()),
-    ArrowUp: () => actions?.up.forEach((func) => func()),
-    ArrowDown: () => actions?.down.forEach((func) => func()),
-    DiagonalUpLeft: () => actions?.upLeft.forEach((func) => func()),
-    DiagonalDownLeft: () => actions?.downLeft.forEach((func) => func()),
-    DiagonalUpRight: () => actions?.upRight.forEach((func) => func()),
-    DiagonalDownRight: () => actions?.downRight.forEach((func) => func()),
-    Space: () => actions?.space.forEach((func) => func()),
-  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     keyPressTrackingMap.set(e.code, true);
   };
   const handleKeyUp = () => {
     keyPressTrackingMap.clear();
+  };
+  const bindKeyToActions = (keyType: string) => {
+    actions[keyType]?.forEach(([instance, method]): any[] => instance[method]());
   };
 
   window.addEventListener('keydown', handleKeyPress);
@@ -28,43 +20,44 @@ export function globalKeyPressEvent(actions: ActionsConfig) {
   // Handles diagonal movements
   setInterval(() => {
     if (keyPressTrackingMap.get('Space')) {
-      keyBindings.Space();
+      bindKeyToActions('space');
+      return;
     }
     if (keyPressTrackingMap.size > 2) {
       keyPressTrackingMap.clear();
       return;
     } else if (keyPressTrackingMap.size > 1) {
       if (keyPressTrackingMap.get('ArrowUp') && keyPressTrackingMap.get('ArrowLeft')) {
-        keyBindings.DiagonalUpLeft();
+        bindKeyToActions('upLeft');
         return;
       }
       if (keyPressTrackingMap.get('ArrowDown') && keyPressTrackingMap.get('ArrowLeft')) {
-        keyBindings.DiagonalDownLeft();
+        bindKeyToActions('downLeft');
         return;
       }
       if (keyPressTrackingMap.get('ArrowUp') && keyPressTrackingMap.get('ArrowRight')) {
-        keyBindings.DiagonalUpRight();
+        bindKeyToActions('upRight');
         return;
       }
       if (keyPressTrackingMap.get('ArrowDown') && keyPressTrackingMap.get('ArrowRight')) {
-        keyBindings.DiagonalDownRight();
+        bindKeyToActions('downRight');
         return;
       }
     } else {
       if (keyPressTrackingMap.get('ArrowLeft')) {
-        keyBindings.ArrowLeft();
+        bindKeyToActions('left');
         return;
       }
       if (keyPressTrackingMap.get('ArrowRight')) {
-        keyBindings.ArrowRight();
+        bindKeyToActions('right');
         return;
       }
       if (keyPressTrackingMap.get('ArrowUp')) {
-        keyBindings.ArrowUp();
+        bindKeyToActions('up');
         return;
       }
       if (keyPressTrackingMap.get('ArrowDown')) {
-        keyBindings.ArrowDown();
+        bindKeyToActions('down');
         return;
       }
     }

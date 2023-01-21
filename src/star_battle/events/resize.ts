@@ -1,5 +1,5 @@
-export function globalResizeEvent(actions: Function[]) {
+export function globalResizeEvent(actions: (Object | string)[][]) {
   window.addEventListener('resize', (e) => {
-    actions.forEach((func) => func());
+    Object.values(actions).forEach(([instance, method]: any) => instance[method]());
   });
 }
