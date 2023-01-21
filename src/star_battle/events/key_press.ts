@@ -1,7 +1,7 @@
 import { ActionsConfig, KeyBindingsInterface } from '../types/events';
 import config from '../config';
 
-export function globalDirectionalKeyPressEvent(actions: ActionsConfig) {
+export function globalKeyPressEvent(actions: ActionsConfig) {
   const keyPressTrackingMap = new Map<string, boolean>();
   const keyBindings: KeyBindingsInterface = {
     ArrowLeft: () => actions?.left.forEach((func) => func()),
@@ -12,17 +12,24 @@ export function globalDirectionalKeyPressEvent(actions: ActionsConfig) {
     DiagonalDownLeft: () => actions?.downLeft.forEach((func) => func()),
     DiagonalUpRight: () => actions?.upRight.forEach((func) => func()),
     DiagonalDownRight: () => actions?.downRight.forEach((func) => func()),
+    Space: () => actions?.space.forEach((func) => func()),
   };
 
-  window.addEventListener('keydown', (e) => {
-    keyPressTrackingMap.set(e.key, true);
-  });
-  window.addEventListener('keyup', () => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    keyPressTrackingMap.set(e.code, true);
+  };
+  const handleKeyUp = () => {
     keyPressTrackingMap.clear();
-  });
+  };
+
+  window.addEventListener('keydown', handleKeyPress);
+  window.addEventListener('keyup', handleKeyUp);
 
   // Handles diagonal movements
   setInterval(() => {
+    if (keyPressTrackingMap.get('Space')) {
+      keyBindings.Space();
+    }
     if (keyPressTrackingMap.size > 2) {
       keyPressTrackingMap.clear();
       return;

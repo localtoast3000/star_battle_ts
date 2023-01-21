@@ -1,62 +1,62 @@
-import { CanvasContext } from '../types/deps';
-import { SpriteInterface, SpriteSheetInterface, SpaceState } from '../types/sprites';
-/*
-       ---- Sprite Sheet ----
-    1. Far bottom image at 600px
-    2. Far right image at 300px
-    3. 100px from image to image
-*/
+import { CanvasInterface } from '../types/deps';
 
-export default function SpaceConstructor<SpriteInterface>({
-  ctx,
-  width,
-  height,
-}: CanvasContext) {
-  const state: SpaceState = { x: width / 2, y: height / 2 };
-  const imageElement: HTMLImageElement = new Image(width, height);
-  imageElement.src = 'assets/sprites/space.png';
-  const scale: number = 1.4;
-  const step: number = 10;
-  return {
-    draw: () =>
-      ctx.drawImage(
-        imageElement,
-        state.x,
-        state.y,
-        1200,
-        1200,
-        0,
-        0,
-        width,
-        height
-      ),
-    goLeft: () => {
-      state.x - step > 0 && (state.x -= step);
-    },
-    goUp: () => {
-      state.y - step > 0 && (state.y -= step);
-    },
-    goRight: () => {
-      state.x + step < width - 50 && (state.x += step);
-    },
-    goDown: () => {
-      state.y + step < height - 75 && (state.y += step);
-    },
-    goUpLeft: () => {
-      state.x - step > 0 && (state.x -= step / 2);
-      state.y - step > 0 && (state.y -= step / 2);
-    },
-    goDownLeft: () => {
-      state.x - step > 0 && (state.x -= step / 2);
-      state.y + step < height + 100 && (state.y += step / 2);
-    },
-    goUpRight: () => {
-      state.x + step < width + 100 && (state.x += step / 2);
-      state.y - step > 0 && (state.y -= step / 2);
-    },
-    goDownRight: () => {
-      state.x + step < width + 100 && (state.x += step / 2);
-      state.y + step < height + 100 && (state.y += step / 2);
-    },
-  };
+export default class Space {
+  private canvas;
+  private state;
+  private imageElement;
+  private step;
+
+  constructor(canvas: CanvasInterface) {
+    this.canvas = canvas;
+    this.state = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
+    this.imageElement = new Image(this.canvas.width, this.canvas.height);
+    this.imageElement.src = 'assets/sprites/space.png';
+    this.step = 10;
+  }
+
+  public draw() {
+    this.canvas.ctx.drawImage(
+      this.imageElement,
+      this.state.x,
+      this.state.y,
+      this.canvas.width,
+      this.canvas.height,
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height
+    );
+  }
+  public goLeft() {
+    console.log(this.state);
+    // this.state.x - this.step > 0 && (this.state.x -= this.step);
+  }
+  public goUp() {
+    console.log(this.state);
+    this.state.y - this.step > 0 && (this.state.y -= this.step);
+  }
+  public goRight() {
+    this.state.x + this.step < this.canvas.width - 50 && (this.state.x += this.step);
+  }
+  public goDown() {
+    this.state.y + this.step < this.canvas.height - 75 && (this.state.y += this.step);
+  }
+  public goUpLeft() {
+    this.state.x - this.step > 0 && (this.state.x -= this.step / 2);
+    this.state.y - this.step > 0 && (this.state.y -= this.step / 2);
+  }
+  public goDownLeft() {
+    this.state.x - this.step > 0 && (this.state.x -= this.step / 2);
+    this.state.y + this.step < this.canvas.height + 100 &&
+      (this.state.y += this.step / 2);
+  }
+  public goUpRight() {
+    this.state.x + this.step < this.canvas.width + 100 && (this.state.x += this.step / 2);
+    this.state.y - this.step > 0 && (this.state.y -= this.step / 2);
+  }
+  public goDownRight() {
+    this.state.x + this.step < this.canvas.width + 100 && (this.state.x += this.step / 2);
+    this.state.y + this.step < this.canvas.height + 100 &&
+      (this.state.y += this.step / 2);
+  }
 }
