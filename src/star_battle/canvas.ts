@@ -6,9 +6,10 @@ export default class Canvas implements CanvasInterface {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
-    this.padding = 200;
-    canvas.width = window.innerWidth - this.padding;
-    canvas.height = window.innerHeight - this.padding;
+    this.padding = 30;
+    canvas.style.marginTop = `${this.padding}px`;
+    canvas.width = window.innerWidth - this.padding * 2;
+    canvas.height = window.innerHeight - this.padding * 2;
   }
 
   public get ctx(): CanvasRenderingContext2D {
@@ -24,7 +25,7 @@ export default class Canvas implements CanvasInterface {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
   public resize(): void {
-    this.canvas.width = window.innerWidth - this.padding;
-    this.canvas.height = window.innerHeight - this.padding;
+    this.canvas.width = window.innerWidth - this.padding * 2;
+    this.canvas.height = window.innerHeight - this.padding * 2;
   }
 }

@@ -27,36 +27,48 @@ export default class Space {
       this.canvas.height
     );
   }
+
+  public updatePos({ x, y }: { x: number; y: number }) {
+    const Xboundry = { left: 0, right: this.canvas.width };
+    const Yboundry = { top: 0, bottom: this.canvas.height };
+    if (x > Xboundry.left && x < Xboundry.right) this.state.x = x;
+    if (y > Yboundry.top && y < Yboundry.bottom) this.state.y = y;
+  }
+
   public goLeft() {
-    console.log(this.state);
-    // this.state.x - this.step > 0 && (this.state.x -= this.step);
+    this.updatePos({ x: this.state.x - this.step, y: this.state.y });
   }
   public goUp() {
-    console.log(this.state);
-    this.state.y - this.step > 0 && (this.state.y -= this.step);
+    this.updatePos({ x: this.state.x, y: this.state.y - this.step });
   }
   public goRight() {
-    this.state.x + this.step < this.canvas.width - 50 && (this.state.x += this.step);
+    this.updatePos({ x: this.state.x + this.step, y: this.state.y });
   }
   public goDown() {
-    this.state.y + this.step < this.canvas.height - 75 && (this.state.y += this.step);
+    this.updatePos({ x: this.state.x, y: this.state.y + this.step });
   }
   public goUpLeft() {
-    this.state.x - this.step > 0 && (this.state.x -= this.step / 2);
-    this.state.y - this.step > 0 && (this.state.y -= this.step / 2);
+    this.updatePos({
+      x: this.state.x - this.step / 2,
+      y: this.state.y - this.step / 2,
+    });
   }
   public goDownLeft() {
-    this.state.x - this.step > 0 && (this.state.x -= this.step / 2);
-    this.state.y + this.step < this.canvas.height + 100 &&
-      (this.state.y += this.step / 2);
+    this.updatePos({
+      x: this.state.x - this.step / 2,
+      y: this.state.y + this.step / 2,
+    });
   }
   public goUpRight() {
-    this.state.x + this.step < this.canvas.width + 100 && (this.state.x += this.step / 2);
-    this.state.y - this.step > 0 && (this.state.y -= this.step / 2);
+    this.updatePos({
+      x: this.state.x + this.step / 2,
+      y: this.state.y - this.step / 2,
+    });
   }
   public goDownRight() {
-    this.state.x + this.step < this.canvas.width + 100 && (this.state.x += this.step / 2);
-    this.state.y + this.step < this.canvas.height + 100 &&
-      (this.state.y += this.step / 2);
+    this.updatePos({
+      x: this.state.x + this.step / 2,
+      y: this.state.y + this.step / 2,
+    });
   }
 }

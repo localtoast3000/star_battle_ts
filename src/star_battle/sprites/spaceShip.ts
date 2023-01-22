@@ -10,24 +10,17 @@ import { SpriteSheetInterface } from '../types/sprites';
 
 export default class SpaceShip {
   private canvas;
-  private state;
   private imageElement;
-  private scale;
-  private step;
   private imageFrame;
   private spriteSheetMap: SpriteSheetInterface;
+  private state;
+  private scale;
+  private step;
 
   constructor(canvas: CanvasInterface) {
     this.canvas = canvas;
     this.imageElement = new Image(384, 697);
     this.imageElement.src = 'assets/sprites/space_ship.png';
-    this.state = {
-      x: this.canvas.width / 2,
-      y: this.canvas.height / 2,
-      imageType: 'forward',
-    };
-    this.scale = 0.8;
-    this.step = 10;
     this.imageFrame = 100;
     this.spriteSheetMap = {
       forward: { x: 0, y: 600 },
@@ -36,6 +29,14 @@ export default class SpaceShip {
       halfLeft: { x: 100, y: 500 },
       halfRight: { x: 100, y: 600 },
     };
+    this.state = {
+      x: this.canvas.width / 2,
+      y: this.canvas.height / 2,
+      imageType: 'forward',
+    };
+
+    this.scale = 0.8;
+    this.step = 10;
   }
 
   public draw(): void {
@@ -51,41 +52,51 @@ export default class SpaceShip {
       this.imageFrame * this.scale
     );
   }
+
+  public updatePos({ x, y }: { x: number; y: number }) {
+    const Xboundry = { left: -10, right: this.canvas.width - 70 };
+    const Yboundry = { top: 0, bottom: this.canvas.height - 80 };
+    if (x > Xboundry.left && x < Xboundry.right) this.state.x = x;
+    if (y > Yboundry.top && y < Yboundry.bottom) this.state.y = y;
+  }
+  public updateImage(imageType: string) {
+    this.state.imageType = imageType;
+  }
+
   public goLeft(): void {
-    this.state.x - this.step > -15 && (this.state.x -= this.step);
-    this.state.imageType = 'left';
+    this.updatePos({ x: this.state.x - this.step, y: this.state.y });
+    this.updateImage('left');
   }
   public goUp(): void {
-    this.state.y - this.step > -15 && (this.state.y -= this.step);
-    this.state.imageType = 'forward';
+    this.updatePos({ x: this.state.x, y: this.state.y - this.step });
+    this.updateImage('forward');
   }
   public goRight(): void {
-    this.state.x + this.step < this.canvas.width - 50 && (this.state.x += this.step);
-    this.state.imageType = 'right';
+    this.updatePos({ x: this.state.x + this.step, y: this.state.y });
+    this.updateImage('right');
   }
   public goDown(): void {
-    this.state.y + this.step < this.canvas.height - 75 && (this.state.y += this.step);
-    this.state.imageType = 'forward';
+    this.updatePos({ x: this.state.x, y: this.state.y + this.step });
+    this.updateImage('forward');
   }
   public goUpLeft(): void {
-    this.state.x - this.step > -15 && (this.state.x -= this.step / 2);
-    this.state.y - this.step > -15 && (this.state.y -= this.step / 2);
-    this.state.imageType = 'halfLeft';
+    this.updatePos({ x: this.state.x - this.step / 2, y: this.state.y - this.step / 2 });
+    this.updateImage('halfLeft');
   }
   public goDownLeft(): void {
-    this.state.x - this.step > -15 && (this.state.x -= this.step / 2);
-    this.state.y + this.step < this.canvas.height - 75 && (this.state.y += this.step / 2);
-    this.state.imageType = 'halfLeft';
+    this.updatePos({
+      x: this.state.x - this.step / 2,
+      y: this.state.y + this.step / 2,
+    });
+    this.updateImage('halfLeft');
   }
   public goUpRight(): void {
-    this.state.x + this.step < this.canvas.width - 50 && (this.state.x += this.step / 2);
-    this.state.y - this.step > -15 && (this.state.y -= this.step / 2);
-    this.state.imageType = 'halfRight';
+    this.updatePos({ x: this.state.x + this.step / 2, y: this.state.y - this.step / 2 });
+    this.updateImage('halfRight');
   }
   public goDownRight(): void {
-    this.state.x + this.step < this.canvas.width - 50 && (this.state.x += this.step / 2);
-    this.state.y + this.step < this.canvas.height - 75 && (this.state.y += this.step / 2);
-    this.state.imageType = 'halfRight';
+    this.updatePos({ x: this.state.x + this.step / 2, y: this.state.y + this.step / 2 });
+    this.updateImage('halfRight');
   }
   public shoot(): void {
     this.state.y += 30;
