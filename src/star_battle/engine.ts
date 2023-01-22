@@ -10,7 +10,11 @@ export default function starBattleEngine(htmlCanvas: HTMLCanvasElement) {
   const space = new Space(canvas);
   const spaceShip = new SpaceShip(canvas);
 
-  globalResizeEvent([[canvas, 'resize']]);
+  globalResizeEvent([
+    [canvas, 'resize'],
+    [space, 'onCanvasResize'],
+    [spaceShip, 'onCanvasResize'],
+  ]);
   globalKeyPressEvent({
     left: [
       [space, 'goLeft'],
