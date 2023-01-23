@@ -14,13 +14,11 @@ export function globalKeyPressEvent(actions: KeyActionsConfig) {
     actions[keyType]?.forEach(([instance, method]): any[] => instance[method]());
   };
 
-  window.addEventListener('keydown', handleKeyPress);
-  window.addEventListener('keyup', handleKeyUp);
-
   // Handles diagonal movements
   setInterval(() => {
     if (keyPressTrackingMap.get('Space')) {
       bindKeyToActions('space');
+      keyPressTrackingMap.clear();
       return;
     }
     if (keyPressTrackingMap.size > 2) {

@@ -12,6 +12,14 @@ export default class Canvas implements CanvasInterface {
     canvas.height = window.innerHeight - this.padding * 2;
   }
 
+  public eventDistributor(e: EventListenerObject) {
+    console.log(e);
+  }
+
+  public get element() {
+    return this.canvas;
+  }
+
   public get ctx(): CanvasRenderingContext2D {
     return this.canvas.getContext('2d') as CanvasRenderingContext2D;
   }

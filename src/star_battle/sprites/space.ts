@@ -11,7 +11,7 @@ export default class Space {
     this.canvas = canvas;
     this.state = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
     this.imageElement = new Image(this.canvas.width, this.canvas.height);
-    this.imageElement.src = 'assets/sprites/space.jpg';
+    this.imageElement.src = 'assets/sprites/space.png';
     this.step = 10;
     this.scale = 2;
   }
@@ -29,6 +29,10 @@ export default class Space {
       this.canvas.height * this.scale
     );
   }
+  public eventDistributor(e: EventListenerObject) {
+    console.log(e);
+  }
+
   public get Xboundary() {
     return { left: 0, right: this.canvas.width };
   }
