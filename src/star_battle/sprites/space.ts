@@ -15,9 +15,10 @@ export default class Space {
     this._state = { x: this._canvas.width / 2, y: this._canvas.height / 2 };
     this._imageElement = new Image(this._canvas.width, this._canvas.height);
     this._imageElement.src = 'assets/sprites/space.png';
-    this._step = 10;
+    this._step = 3;
     this._scale = 2;
     this.trackPressedKeys();
+    this.onResize();
   }
 
   public draw() {
