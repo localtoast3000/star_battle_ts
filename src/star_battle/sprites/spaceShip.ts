@@ -16,7 +16,7 @@ export default class SpaceShip {
   private _imageElement;
   private _imageFrame;
   private _spriteSheetMap: SpriteSheetInterface;
-  private keyDownTrackingMap;
+  private _pressedKeysTrackingMap;
   private _state: {
     x: number;
     y: number;
@@ -28,7 +28,7 @@ export default class SpaceShip {
 
   constructor(canvas: CanvasInterface) {
     this._canvas = canvas;
-    this.keyDownTrackingMap = new Map<string, boolean>();
+    this._pressedKeysTrackingMap = new Map<string, boolean>();
     this._imageElement = new Image(384, 697);
     this._imageElement.src = 'assets/sprites/space_ship.png';
     this._imageFrame = 100;
@@ -48,7 +48,7 @@ export default class SpaceShip {
 
     this._scale = 0.8;
     this._step = 10;
-    this.trackDownKeys();
+    this.trackPressedKeys();
   }
 
   public draw(): void {
@@ -63,11 +63,20 @@ export default class SpaceShip {
       this._imageFrame * this._scale,
       this._imageFrame * this._scale
     );
-    // this.animateBullets();
+    this.state.bullets.forEach((bullet) => {
+      bullet.draw();
+    });
   }
 
   public get state() {
     return this._state;
+  }
+
+  public eventDistributor(e: EventListenerObject) {
+    if (e instanceof KeyboardEvent) {
+      if (e.type === 'keydown') this.onKeyDown(e);
+      if (e.type === 'keyup') this.onKeyUp(e);
+    }
   }
 
   private get Xboundary() {
@@ -92,57 +101,59 @@ export default class SpaceShip {
     this._state.y = this.Yboundary.bottom - 10;
   }
 
-  private drawBullet(): void {
-    const bullet = new Bullet(this._canvas);
-    bullet.draw();
-  }
-
   private shoot() {
-    this._state.bullets.push(new Bullet(this._canvas));
-    console.log(this.state.bullets);
-  }
-
-  private eventDistributor(e: EventListenerObject) {
-    if (e instanceof KeyboardEvent) {
-      if (e.type === 'keydown') this.onKeyDown(e);
-      if (e.type === 'keyup') this.onKeyUp(e);
-    }
+    const bullet = new Bullet(this._canvas, { x: this.state.x + 40, y: this.state.y });
+    this._state.bullets.push(bullet);
+    const posX = this.state.x;
+    let posY = this.state.y;
+    const animation = setInterval(() => {
+      bullet.updatePos({ x: posX + 40, y: posY });
+      posY -= 10;
+      if (bullet.state.y <= this.Yboundary.top) {
+        this._state.bullets = this._state.bullets.filter((b) => b !== bullet);
+        clearInterval(animation);
+      }
+    }, config.speed);
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
-      this.keyDownTrackingMap.set(e.code, true);
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.code)) {
+      this._pressedKeysTrackingMap.set(e.code, true);
+    }
+    if (e.code === 'Space') {
+      this.shoot();
+      console.log(this.state.bullets);
     }
   }
 
   private onKeyUp(e: KeyboardEvent) {
-    this.keyDownTrackingMap.delete(e.code);
+    this._pressedKeysTrackingMap.delete(e.code);
   }
 
-  private trackDownKeys() {
+  private trackPressedKeys() {
     const diagonalResistance = 0.8;
     setInterval(() => {
-      if (this.keyDownTrackingMap.size === 1) {
-        if (this.keyDownTrackingMap.get('ArrowLeft')) {
+      if (this._pressedKeysTrackingMap.size === 1) {
+        if (this._pressedKeysTrackingMap.get('ArrowLeft')) {
           this.updatePos({ x: this.state.x - this._step, y: this.state.y });
           this.updateImageType('left');
         }
-        if (this.keyDownTrackingMap.get('ArrowRight')) {
+        if (this._pressedKeysTrackingMap.get('ArrowRight')) {
           this.updatePos({ x: this.state.x + this._step, y: this.state.y });
           this.updateImageType('right');
         }
-        if (this.keyDownTrackingMap.get('ArrowUp')) {
+        if (this._pressedKeysTrackingMap.get('ArrowUp')) {
           this.updatePos({ x: this.state.x, y: this.state.y - this._step });
           this.updateImageType('forward');
         }
-        if (this.keyDownTrackingMap.get('ArrowDown')) {
+        if (this._pressedKeysTrackingMap.get('ArrowDown')) {
           this.updatePos({ x: this.state.x, y: this.state.y + this._step });
           this.updateImageType('forward');
         }
       } else {
         if (
-          this.keyDownTrackingMap.get('ArrowLeft') &&
-          this.keyDownTrackingMap.get('ArrowUp')
+          this._pressedKeysTrackingMap.get('ArrowLeft') &&
+          this._pressedKeysTrackingMap.get('ArrowUp')
         ) {
           this.updatePos({
             x: this.state.x - this._step * diagonalResistance,
@@ -151,8 +162,8 @@ export default class SpaceShip {
           this.updateImageType('halfLeft');
         }
         if (
-          this.keyDownTrackingMap.get('ArrowLeft') &&
-          this.keyDownTrackingMap.get('ArrowDown')
+          this._pressedKeysTrackingMap.get('ArrowLeft') &&
+          this._pressedKeysTrackingMap.get('ArrowDown')
         ) {
           this.updatePos({
             x: this.state.x - this._step * diagonalResistance,
@@ -161,8 +172,8 @@ export default class SpaceShip {
           this.updateImageType('halfLeft');
         }
         if (
-          this.keyDownTrackingMap.get('ArrowRight') &&
-          this.keyDownTrackingMap.get('ArrowUp')
+          this._pressedKeysTrackingMap.get('ArrowRight') &&
+          this._pressedKeysTrackingMap.get('ArrowUp')
         ) {
           this.updatePos({
             x: this.state.x + this._step * diagonalResistance,
@@ -171,8 +182,8 @@ export default class SpaceShip {
           this.updateImageType('halfRight');
         }
         if (
-          this.keyDownTrackingMap.get('ArrowRight') &&
-          this.keyDownTrackingMap.get('ArrowDown')
+          this._pressedKeysTrackingMap.get('ArrowRight') &&
+          this._pressedKeysTrackingMap.get('ArrowDown')
         ) {
           this.updatePos({
             x: this.state.x + this._step * diagonalResistance,

@@ -1,45 +1,31 @@
 import { CanvasInterface } from '../types/deps';
-import { SpriteSheetInterface } from '../types/sprites';
 
 export default class Bullet {
-  private canvas;
-  private state;
-  private scale;
-  private step;
+  private _canvas;
+  private _state;
 
-  constructor(canvas: CanvasInterface) {
-    this.canvas = canvas;
-    this.state = {
-      x: this.canvas.width / 2,
-      y: this.canvas.height / 2,
-      imageType: 'forward',
+  constructor(canvas: CanvasInterface, initalPos: { x: number; y: number }) {
+    this._canvas = canvas;
+    this._state = {
+      x: initalPos.x,
+      y: initalPos.y,
     };
-
-    this.scale = 0.8;
-    this.step = 10;
   }
 
   public draw(): void {
-    this.canvas.ctx.beginPath();
-    this.canvas.ctx.rect(this.state.x, this.state.y, 3, 15);
-    this.canvas.ctx.fillStyle = 'red';
-    this.canvas.ctx.fill();
-    this.canvas.ctx.closePath();
+    this._canvas.ctx.beginPath();
+    this._canvas.ctx.rect(this._state.x, this._state.y, 3, 15);
+    this._canvas.ctx.fillStyle = 'red';
+    this._canvas.ctx.fill();
+    this._canvas.ctx.closePath();
   }
 
-  public eventDistributor(e: EventListenerObject) {
-    console.log(e);
-  }
-
-  public get Xboundary() {
-    return { left: -10, right: this.canvas.width - 70 };
-  }
-  public get Yboundary() {
-    return { top: 0, bottom: this.canvas.height - 80 };
+  public get state() {
+    return this._state;
   }
 
   public updatePos({ x, y }: { x: number; y: number }) {
-    if (x > this.Xboundary.left && x < this.Xboundary.right) this.state.x = x;
-    if (y > this.Yboundary.top && y < this.Yboundary.bottom) this.state.y = y;
+    this._state.x = x;
+    this._state.y = y;
   }
 }
