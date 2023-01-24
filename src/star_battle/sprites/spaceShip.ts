@@ -40,7 +40,7 @@ export default class SpaceShip {
       halfRight: { x: 100, y: 600 },
     };
     this._state = {
-      x: this.Xboundary.right * 0.8,
+      x: this._canvas.width / 2 - 25,
       y: this.Yboundary.bottom - 10,
       bullets: [],
       imageType: 'forward',
@@ -72,11 +72,10 @@ export default class SpaceShip {
     return this._state;
   }
 
-  public eventDistributor(e: EventListenerObject) {
-    if (e instanceof KeyboardEvent) {
-      if (e.type === 'keydown') this.onKeyDown(e);
-      if (e.type === 'keyup') this.onKeyUp(e);
-    }
+  public eventDistributor(e: Event) {
+    if (e.type === 'keydown') this.onKeyDown(e as KeyboardEvent);
+    if (e.type === 'keyup') this.onKeyUp(e as KeyboardEvent);
+    if (e.type === 'resize') this.onResize();
   }
 
   private get Xboundary() {
@@ -94,11 +93,6 @@ export default class SpaceShip {
 
   private updateImageType(type: string) {
     this.state.imageType = type;
-  }
-
-  private onCanvasResize() {
-    this._state.x = this.Xboundary.right * 0.8;
-    this._state.y = this.Yboundary.bottom - 10;
   }
 
   private shoot() {
@@ -128,6 +122,12 @@ export default class SpaceShip {
 
   private onKeyUp(e: KeyboardEvent) {
     this._pressedKeysTrackingMap.delete(e.code);
+  }
+
+  private onResize() {
+    this._state.x = this._canvas.width / 2 - 25;
+    this._state.y = this.Yboundary.bottom - 10;
+    this.updateImageType('forward');
   }
 
   private trackPressedKeys() {

@@ -9,7 +9,9 @@ export default function starBattleEngine(htmlCanvas: HTMLCanvasElement) {
   const space = new Space(canvas);
   const spaceShip = new SpaceShip(canvas);
 
-  eventProvider((e: EventListenerObject) => {
+  eventProvider((e: Event) => {
+    canvas.eventDistributor(e);
+    space.eventDistributor(e);
     spaceShip.eventDistributor(e);
   });
 

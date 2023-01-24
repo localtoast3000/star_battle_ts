@@ -12,8 +12,8 @@ export default class Canvas implements CanvasInterface {
     canvas.height = window.innerHeight - this.padding * 2;
   }
 
-  public eventDistributor(e: EventListenerObject) {
-    console.log(e);
+  public eventDistributor(e: Event) {
+    if (e.type === 'resize') this.onResize();
   }
 
   public get element() {
@@ -32,7 +32,7 @@ export default class Canvas implements CanvasInterface {
   public reset(): void {
     this.ctx.clearRect(0, 0, this.width, this.height);
   }
-  public resize(): void {
+  private onResize(): void {
     this.canvas.width = window.innerWidth - this.padding * 2;
     this.canvas.height = window.innerHeight - this.padding * 2;
   }

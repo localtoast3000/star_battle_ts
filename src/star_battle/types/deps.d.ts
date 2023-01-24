@@ -4,5 +4,4 @@ export interface CanvasInterface {
   width: Function<number>;
   height: Function<number>;
   reset: Function<void>;
-  resize: Function<void>;
 }
