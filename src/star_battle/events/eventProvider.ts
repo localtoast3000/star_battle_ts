@@ -1,5 +1,8 @@
 export default function eventProvider(cb: any) {
-  window.addEventListener('keydown', cb);
-  window.addEventListener('keyup', cb);
-  window.addEventListener('resize', cb);
+  const windowEvents = ['keydown', 'keyup', 'resize'];
+  windowEvents.forEach((event) => window.addEventListener(event, cb));
+  return {
+    removeEvents: () =>
+      windowEvents.forEach((event) => window.removeEventListener(event, cb)),
+  };
 }

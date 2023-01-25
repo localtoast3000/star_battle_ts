@@ -79,7 +79,7 @@ export default class SpaceShip {
   }
 
   private get Xboundary() {
-    return { left: -10, right: this._canvas.width - 70 };
+    return { left: -10, right: this._canvas.width - 0 };
   }
 
   private get Yboundary() {
@@ -96,14 +96,69 @@ export default class SpaceShip {
   }
 
   private shoot() {
-    const bullet = new Bullet(this._canvas, { x: this.state.x + 40, y: this.state.y });
+    const direction = this.state.imageType;
+    const { angle, xVelocity, yVelocity, xOffset, yOffset } = (() => {
+      if (direction === 'left')
+        return {
+          angle: -40,
+          xVelocity: -this._step,
+          yVelocity: -(this._step + 2),
+          xOffset: 12,
+          yOffset: 6,
+        };
+      if (direction === 'halfLeft')
+        return {
+          angle: -20,
+          xVelocity: -this._step,
+          yVelocity: -(this._step + 17),
+          xOffset: 25,
+          yOffset: -1,
+        };
+      if (direction === 'right')
+        return {
+          angle: 40,
+          xVelocity: this._step,
+          yVelocity: -(this._step + 2),
+          xOffset: 67,
+          yOffset: 4,
+        };
+      if (direction === 'halfRight')
+        return {
+          angle: 20,
+          xVelocity: this._step,
+          yVelocity: -(this._step + 17),
+          xOffset: 54.5,
+          yOffset: -3,
+        };
+      return {
+        angle: 0,
+        xVelocity: 0,
+        yVelocity: -this._step,
+        xOffset: 40,
+        yOffset: -5,
+      };
+    })();
+
+    const bullet = new Bullet(this._canvas, {
+      x: this.state.x + xOffset,
+      y: this.state.y + yOffset,
+      angle,
+    });
+
     this._state.bullets.push(bullet);
-    const posX = this.state.x;
-    let posY = this.state.y;
+    let posX = this.state.x + xOffset;
+    let posY = this.state.y + yOffset;
+
     const animation = setInterval(() => {
-      bullet.updatePos({ x: posX + 40, y: posY });
-      posY -= 10;
-      if (bullet.state.y <= this.Yboundary.top) {
+      if (
+        bullet.state.y > this.Yboundary.top &&
+        bullet.state.x > this.Xboundary.left &&
+        bullet.state.x < this.Xboundary.right
+      ) {
+        bullet.updatePos({ x: posX, y: posY });
+        posX += xVelocity;
+        posY += yVelocity;
+      } else {
         this._state.bullets = this._state.bullets.filter((b) => b !== bullet);
         clearInterval(animation);
       }

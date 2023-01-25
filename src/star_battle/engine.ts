@@ -11,7 +11,7 @@ export default function starBattleEngine(htmlCanvas: HTMLCanvasElement) {
   const alien = new Alien(canvas);
   const spaceShip = new SpaceShip(canvas);
 
-  eventProvider((e: Event) => {
+  const eventLoader = eventProvider((e: Event) => {
     canvas.eventDistributor(e);
     space.eventDistributor(e);
     alien.eventDistributor(e);
@@ -22,7 +22,7 @@ export default function starBattleEngine(htmlCanvas: HTMLCanvasElement) {
   return setInterval(() => {
     canvas.reset();
     space.draw();
-    alien.draw();
+    // alien.draw();
     spaceShip.draw();
   }, config.speed);
 }
